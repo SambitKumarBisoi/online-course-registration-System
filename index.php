@@ -1,5 +1,7 @@
 <?php
-// index.php - SkillPilot homepage
+// index.php - SkillPilot homepage (single file)
+// - Requires db.php in same folder that creates $conn (mysqli)
+// - Shows courses from DB and provides modern light/dark UI + animations
 include 'db.php';
 session_start();
 
@@ -33,7 +35,7 @@ $result = $conn->query($sql);
   body{
     margin:0;
     font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    background: linear-gradient(180deg,#071428,#102a43);
+    background: linear-gradient(180deg,#071428,#102a43); /* dark-blue gradient */
     color: #e6f7ff;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
@@ -43,7 +45,7 @@ $result = $conn->query($sql);
     --muted: #9ad6ff;
     --text: #e6f7ff;
     --card-bg: rgba(255,255,255,0.02);
-    --accent: linear-gradient(90deg,#00c6ff,#7b2ff7);
+    --accent: linear-gradient(90deg,#00c6ff,#7b2ff7); /* neon button */
     --stat-color: #00e5ff;
     --card-border: rgba(255,255,255,0.04);
     --cta-shadow: 0 10px 30px rgba(0,0,0,0.6);
@@ -51,12 +53,12 @@ $result = $conn->query($sql);
 
   /* Light theme overrides */
   body.light{
-    --bg: linear-gradient(180deg,#e9f8ff,#ffffff);
+    --bg: linear-gradient(180deg,#e9f8ff,#ffffff); /* sky -> white */
     --surface: #ffffff;
     --muted: #475569;
-    --text: #07203a;
+    --text: #07203a; /* dark navy */
     --card-bg: #ffffff;
-    --accent: linear-gradient(90deg,#42a5f5,#1e88e5);
+    --accent: linear-gradient(90deg,#42a5f5,#1e88e5); /* blue button */
     --stat-color: #0d4b8f;
     --card-border: rgba(6,21,37,0.04);
     --cta-shadow: 0 8px 24px rgba(6,21,37,0.06);
@@ -64,17 +66,20 @@ $result = $conn->query($sql);
     background: var(--bg);
   }
 
+  /* Global elements */
   *{box-sizing:border-box}
   a{color:inherit;text-decoration:none}
   header{ padding:20px 16px; text-align:center; background:transparent; position:sticky; top:0; z-index:40; }
   .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 16px; }
 
+  /* Brand / nav */
   .brand { font-weight:800; font-size:20px; letter-spacing:.6px; color:var(--text); }
   nav { display:flex; align-items:center; gap:12px; padding:10px 0; width:100%; }
   .nav-links{ display:flex; gap:10px; margin-left:16px; align-items:center; }
   .nav-links a{ padding:8px 10px; border-radius:8px; color:var(--muted); font-weight:600; font-size:14px; }
   .nav-links a:hover{ color:var(--text); transform:translateY(-2px) }
 
+  /* Theme toggle with sun/moon icons */
   .theme-toggle { margin-left:auto; display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none; position:relative; }
   .toggle-shell {
     width:60px; height:28px; border-radius:999px; padding:4px; display:flex; align-items:center;
@@ -96,6 +101,7 @@ $result = $conn->query($sql);
   .icon-moon { right:6px; display:inline; }
   body.light .icon-moon { display:none; }
 
+  /* Hero */
   .hero{ margin:22px auto; padding:36px 18px; text-align:center; border-radius:14px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.01)); }
   body.light .hero{ background: linear-gradient(180deg,#f1fbff,#ffffff); box-shadow:var(--shadow-soft) }
   .hero h1{ font-size:36px; margin-bottom:10px; color:var(--text) }
@@ -108,11 +114,22 @@ $result = $conn->query($sql);
   }
   .cta:hover{ transform:translateY(-4px) }
 
+  /* Stats */
   .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:18px auto; padding:10px; }
   .stat { background:var(--surface); border-radius:10px; padding:14px; text-align:center; border:1px solid var(--card-border); box-shadow: var(--shadow-soft); }
   .stat h3{ margin-bottom:6px; color:var(--stat-color); font-size:22px; }
   .stat p{ color:var(--muted); font-size:13px; }
 
+  /* Testimonials carousel */
+  .testimonials { margin:22px auto; padding:8px; }
+  .testimonials .title{ text-align:center; margin-bottom:12px; color:var(--text); font-size:20px; }
+  .test-wrap{ position:relative; overflow:hidden; border-radius:12px; }
+  .test-track{ display:flex; gap:12px; transition: transform 0.7s cubic-bezier(.2,.9,.2,1); }
+  .testimonial{ flex:0 0 100%; padding:18px; background:var(--surface); border-radius:10px; box-shadow:var(--shadow-soft) }
+  .testimonial p{ color:var(--muted); margin-bottom:10px }
+  .testimonial strong{ color:var(--stat-color) }
+
+  /* Courses grid */
   .courses { margin:26px auto; display:grid; gap:16px; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); }
   .card { background:var(--card-bg); border-radius:12px; padding:16px; border:1px solid var(--card-border); box-shadow:var(--shadow-soft); transform:translateY(18px); opacity:0; transition: transform 0.6s ease, opacity 0.6s ease; }
   body.light .card{ background:#fff }
@@ -120,7 +137,7 @@ $result = $conn->query($sql);
   .card h4{ margin-bottom:6px; color:var(--stat-color) }
   .card p { color:var(--muted); font-size:14px; margin-bottom:8px }
   .card .meta{ font-size:13px; color:var(--muted); margin-bottom:10px }
-  .enroll {
+    .enroll {
     display:inline-block;
     padding:8px 12px;
     border-radius:8px;
@@ -133,12 +150,14 @@ $result = $conn->query($sql);
     animation: enroll-pulse 2s infinite ease-in-out;
   }
 
+  /* Continuous pulse animation */
   @keyframes enroll-pulse {
     0%   { transform: scale(1); }
     50%  { transform: scale(1.03); }
     100% { transform: scale(1); }
   }
 
+  /* Hover bounce animation */
   .enroll:hover {
     animation: enroll-bounce 0.4s ease;
     transform: scale(1.05);
@@ -152,34 +171,33 @@ $result = $conn->query($sql);
     100% { transform: scale(1); }
   }
 
+
+  /* footer */
   footer { margin:36px auto; text-align:center; color:var(--muted); padding:8px; }
+
+  /* responsive */
   @media (max-width:980px){ .stats{ grid-template-columns:repeat(2,1fr) } .hero h1{ font-size:28px } }
   @media (max-width:600px){ .stats{ grid-template-columns: 1fr } .nav-links{ display:none } }
+
+  /* small animations */
+  @keyframes pulse { 0%{transform:scale(1)} 50%{transform:scale(1.03)} 100%{transform:scale(1)} }
   </style>
 </head>
 <body>
-  <!-- HEADER + NAV -->
+  <!-- HEADER + NAV (Home removed) -->
   <header>
     <div class="wrap" style="display:flex; align-items:center; gap:12px; justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:10px;">
         <div class="brand" aria-hidden="true">SkillPilot</div>
         <nav aria-label="Main navigation">
           <div class="nav-links">
-            <?php if(isset($_SESSION['user_id'])): ?>
-              <?php if($_SESSION['role'] == 'student'): ?>
-                <a href="student_dashboard.php">Dashboard</a>
-              <?php elseif($_SESSION['role'] == 'admin'): ?>
-                <a href="admin_dashboard.php">Dashboard</a>
-              <?php endif; ?>
-              <a href="logout.php">Logout</a>
-            <?php else: ?>
-              <a href="register.php">Register</a>
-              <a href="login.php">Login</a>
-            <?php endif; ?>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
           </div>
         </nav>
       </div>
 
+      <!-- Theme toggle (click to switch) -->
       <div class="theme-toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle theme">
         <div class="toggle-shell">
           <div class="toggle-ball">
@@ -194,12 +212,12 @@ $result = $conn->query($sql);
   <!-- HERO -->
   <main>
     <section class="hero wrap" aria-label="Hero">
-      <h1>Learn, Build, Succeed — Launch Your Career Today</h1>
-      <p>Hands-on, project-driven courses designed to turn your skills into real-world results. Create, showcase, and grow with guidance from industry mentors.</p>
-      <a class="cta" href="register.php">Start Learning</a>
+<h1>Learn, Build, Succeed — Launch Your Career Today</h1>
+<p>Hands-on, project-driven courses designed to turn your skills into real-world results. Create, showcase, and grow with guidance from industry mentors.</p>
+<a class="cta" href="register.php">Start Learning </a>
     </section>
 
-    <!-- STATS -->
+    <!-- STATS (animated) -->
     <section class="stats wrap" aria-label="Statistics">
       <div class="stat"><h3 data-target="50000">0+</h3><p>Students enrolled</p></div>
       <div class="stat"><h3 data-target="120">0+</h3><p>Expert instructors</p></div>
@@ -207,7 +225,28 @@ $result = $conn->query($sql);
       <div class="stat"><h3 data-target="95">0%</h3><p>Success rate</p></div>
     </section>
 
-    <!-- COURSES -->
+    <!-- TESTIMONIALS carousel -->
+    <section class="testimonials wrap" aria-label="Testimonials">
+      <div class="title">What learners say</div>
+      <div class="test-wrap" id="testWrap">
+        <div class="test-track" id="testTrack">
+          <div class="testimonial">
+            <p>"SkillPilot's courses helped me build real projects and land interviews faster."</p>
+            <strong>- Priya, Data Analyst</strong>
+          </div>
+          <div class="testimonial">
+            <p>"The mentors were helpful; the course content was practical and up-to-date."</p>
+            <strong>- Rahul, Full Stack Dev</strong>
+          </div>
+          <div class="testimonial">
+            <p>"Great for students — concise courses and real-world tasks."</p>
+            <strong>- Sneha, MBA Student</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COURSES (from DB) -->
     <section class="courses wrap" aria-label="Available courses">
       <?php if ($result && $result->num_rows > 0): ?>
         <?php $delay = 0.00; while($row = $result->fetch_assoc()): ?>
@@ -222,7 +261,7 @@ $result = $conn->query($sql);
           <article class="card" style="animation-delay:<?= htmlspecialchars($delay) ?>s">
             <h4><?= $name ?></h4>
             <p><?= strlen($desc) > 180 ? substr($desc,0,177).'...' : $desc ?></p>
-            <div class="meta"><strong>Duration:</strong> <?= $dur ?> • <strong>Seats:</strong> <?= $seats ?></div>
+            <div class="meta"><strong>Duration:</strong> <?= $dur ?> &nbsp; • &nbsp; <strong>Seats:</strong> <?= $seats ?></div>
             <div><strong>Price:</strong> ₹<?= $price ?></div>
             <div style="margin-top:12px"><a class="enroll" href="login.php">Enroll now</a></div>
           </article>
@@ -238,20 +277,37 @@ $result = $conn->query($sql);
   </footer>
 
   <script>
+  /* ===========================
+     Theme toggle + persistence
+     =========================== */
   (function(){
     const body = document.body;
     const toggle = document.getElementById('themeToggle');
+
+    // Apply saved theme
     if(localStorage.getItem('skillpilot_theme') === 'light'){
       body.classList.add('light');
     }
+
     toggle.addEventListener('click', () => {
       body.classList.toggle('light');
       localStorage.setItem('skillpilot_theme', body.classList.contains('light') ? 'light' : 'dark');
     });
+
+    // Keyboard support
+    toggle.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); }
+    });
   })();
 
+  /* ===========================
+     Stats count-up when visible
+     =========================== */
   (function(){
     const nodes = document.querySelectorAll('.stat h3');
+    if(!nodes.length) return;
+
+    const opts = { threshold: 0.5 };
     const obs = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if(!entry.isIntersecting) return;
@@ -260,35 +316,77 @@ $result = $conn->query($sql);
         const target = Number(raw) || 0;
         const isPercent = el.innerText.includes('%');
         const suffix = isPercent ? '%' : '+';
+        const duration = 1200;
+        const frame = 20;
+        const steps = Math.max(6, Math.round(duration / frame));
+        const increment = Math.max(1, Math.round(target / steps));
         let value = 0;
-        const duration = 1200, frame = 20;
-        const steps = Math.max(6, Math.round(duration/frame));
-        const increment = Math.max(1, Math.round(target/steps));
+
         const t = setInterval(() => {
           value += increment;
-          if(value >= target){
-            el.innerText = target + suffix;
+          if(value >= target) {
+            el.innerText = (isPercent ? target + '%' : target + '+');
             clearInterval(t);
           } else {
-            el.innerText = value + suffix;
+            el.innerText = (isPercent ? value + '%' : value + '+');
           }
         }, frame);
         observer.unobserve(el);
       });
-    }, { threshold:0.5 });
+    }, opts);
+
     nodes.forEach(n => obs.observe(n));
   })();
 
+  /* ===========================
+     Testimonials auto-slide (pause on hover)
+     =========================== */
+  (function(){
+    const track = document.getElementById('testTrack');
+    if(!track) return;
+    const slides = Array.from(track.children);
+    let idx = 0;
+    let timer = null;
+    const interval = 4200;
+
+    function show(i) {
+      track.style.transform = `translateX(-${i * 100}%)`;
+    }
+
+    function start() {
+      if(timer) clearInterval(timer);
+      timer = setInterval(() => {
+        idx = (idx + 1) % slides.length;
+        show(idx);
+      }, interval);
+    }
+    function stop() {
+      if(timer) { clearInterval(timer); timer = null; }
+    }
+
+    if(slides.length > 1) start();
+
+    track.addEventListener('mouseenter', stop);
+    track.addEventListener('mouseleave', start);
+
+    const wrap = document.getElementById('testWrap');
+    if(wrap){ wrap.addEventListener('mouseenter', stop); wrap.addEventListener('mouseleave', start); }
+  })();
+
+  /* ===========================
+     Reveal course cards (staggered)
+     =========================== */
   (function(){
     const cards = document.querySelectorAll('.card');
+    if(!cards.length) return;
     const obs = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
-        if(entry.isIntersecting){
+        if(entry.isIntersecting) {
           entry.target.classList.add('visible');
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold:0.12 });
+    }, { threshold: 0.12 });
     cards.forEach(c => obs.observe(c));
   })();
   </script>
